@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Chrome extension packaging and signing artifacts
+*.crx
+*.pem
+dist/
+
+# Local dependencies and secrets, if added later
+node_modules/
+.env
+.env.*
+!.env.example
