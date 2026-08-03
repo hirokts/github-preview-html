@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub HTML Preview",
+  "description": "GitHub 上で表示中の HTML ファイルを新しいタブで表示します。",
+  "version": "1.0.0",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://github.com/*", "https://raw.githubusercontent.com/*"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "action": { "default_title": "GitHub HTML Preview" },
+  "content_scripts": [{
+    "matches": ["https://github.com/*"],
+    "js": ["content.js"],
+    "run_at": "document_idle"
+  }]
+}
