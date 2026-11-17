@@ -6,11 +6,11 @@ GitHub の `*.html` / `*.htm` ファイルをブラウザでレンダリング�
 
 この拡張機能は、**ソースコードを確認し、要求権限と安全性を自ら判断できる技術者向け**の小さな個人用ツールです。一般利用者向けに第三者監査・脆弱性診断・安全性保証を提供するものではありません。
 
-確認対象は小さく、主に `manifest.json`、`content.js`、`background.js`、`preview.js` です。現行コードでは、次の設計になっています。
+確認対象は小さく、主に `manifest.json`、`content.js`、`background.js`、`preview.js`、`sandbox.js` です。現行コードでは、次の設計になっています。
 
 - GitHub に表示済みの HTML を読み取り、拡張機能内の一時領域を経由して別タブに描画します。
 - アクセストークン、Cookie、パスワードは取得・保存しません。HTML を外部のプレビューサービスや分析基盤へ送信しません。
-- プレビューは sandbox 付き iframe 内で開かれ、HTML から Chrome 拡張機能の権限や API にはアクセスできません。
+- プレビューは manifest の sandbox ページ内で開かれ、HTML から Chrome 拡張機能の権限や API にはアクセスできません。HTML 内のスクリプトは sandbox 内で実行されます。
 - HTML が参照する外部画像・CSS・リンクなどの通信は、元の HTML の内容に応じて発生することがあります。信頼できない HTML はプレビューしないでください。
 
 設計上のデータ経路・権限・既知の制約は [SECURITY.md](SECURITY.md) に記載しています。導入前・更新前に、必ず変更差分と権限を確認してください。
@@ -19,6 +19,7 @@ GitHub の `*.html` / `*.htm` ファイルをブラウザでレンダリング�
 
 - GitHub の HTML ファイル画面に **Preview HTML** ボタンを追加
 - ボタンを押すと、新しいタブで HTML を描画
+- HTML 内のスクリプトを sandbox 内で実行（CDN から読み込む Mermaid などの図も描画）
 - 固定コミットの URL（例: `.../blob/<commit>/kaibou.html`）と非公開リポジトリに対応
 
 ## インストール（開発版）

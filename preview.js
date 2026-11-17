@@ -14,8 +14,17 @@ async function showPreview() {
 
   // base を付け、相対 CSS・画像などを同じコミット／ブランチ上で解決する。
   const base = `<base href="${escapeAttribute(baseUrlFor(result.sourceUrl, rawUrl))}">`;
-  frame.srcdoc = result.html.replace(/<head(\s[^>]*)?>/i, (tag) => `${tag}${base}`);
-  if (!/<head[\s>]/i.test(result.html)) frame.srcdoc = `${base}${result.html}`;
+  const html = /<head[\s>]/i.test(result.html)
+    ? result.html.replace(/<head(\s[^>]*)?>/i, (tag) => `${tag}${base}`)
+    : `${base}${result.html}`;
+
+  // srcdoc は拡張機能ページの CSP を継承してスクリプトが動かないため、manifest の sandbox ページで描画する。
+  window.addEventListener("message", function onReady(event) {
+    if (event.source !== frame.contentWindow || event.data?.type !== "sandbox-ready") return;
+    window.removeEventListener("message", onReady);
+    frame.contentWindow.postMessage({ type: "render-preview", html }, "*");
+  });
+  frame.src = "sandbox.html";
   status.hidden = true;
   frame.style.display = "block";
 }

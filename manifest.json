@@ -5,7 +5,11 @@
   "version": "1.0.0",
   "permissions": ["storage", "tabs"],
   "host_permissions": ["https://github.com/*", "https://raw.githubusercontent.com/*"],
-  "background": { "service_worker": "background.js", "type": "module" },
+  "sandbox": { "pages": ["sandbox.html"] },
+  "content_security_policy": {
+    "sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; child-src 'self' https: data: blob:"
+  },
+  "background":{ "service_worker": "background.js", "type": "module" },
   "action": { "default_title": "GitHub HTML Preview" },
   "content_scripts": [{
     "matches": ["https://github.com/*"],
